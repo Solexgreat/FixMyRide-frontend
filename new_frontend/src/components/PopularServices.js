@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { fetchPopularService } from './APIs';
 // import { Swiper, SwiperSlide } from 'swiper/react';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
@@ -76,6 +77,24 @@ const PrevArrow = ({ onClick }) => (
 
 function PopularServices() {
 
+	const [popularServices, setPopularServices] = useState([])
+	const [error, setError] = useState(null)
+
+	const fetchServices = useCallback( async () => {
+		try{
+			const services = await fetchPopularService();
+			setPopularServices(services);
+			setError('')
+		} catch (err){
+			setError(err)
+			setPopularServices([])
+		}
+	}, [])
+
+	useEffect(() => {
+		fetchServices();
+	  }, [fetchServices]);
+
 	var settings = {
     infinite: true,
     speed: 500,
@@ -92,8 +111,8 @@ function PopularServices() {
 		<section className="popular-service">
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
-			{popularServicesDetails.map(service => (
-				<div className="Card">
+			{popularServices.map(service => (
+				<div className="Card" key={service.service_id}>
 					<div className='image'>
 						<img src={service.getImageSrc()} alt={service.title} />
 					</div>
@@ -106,9 +125,9 @@ function PopularServices() {
 		</div>
 		<div className='slider'>
 			<Slider {...settings}>
-				{popularServicesDetails.map((service) => (
+				{popularServices.map((service) => (
 					<a href={`#${ service.a}`}>
-						<div className='Card'>
+						<div className='Card' key={service.service_id}>
 							<div className='image'>
 								<img src= {service.getImageSrc()} alt="" / >
 							</div>
