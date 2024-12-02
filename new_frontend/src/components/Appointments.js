@@ -1,16 +1,28 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import '../Css-folder/Appointment.css'
+import { useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { API_BASE_URL } from '../constant';
+import 'react-toastify/dist/ReactToastify.css';
+import { format } from 'date-fns';
+import { validatePhoneNumber } from '../utils/validationUtils';
 
 
 function Appointments() {
+    const location = useLocation();
+    const {
+      selectedServiceId: initialSelectedServiceId,
+      selectedServiceName: initialSelectedServiceName,
+      selectedServiceCategory: initialSelectedServiceCategory,
+    } = location.state || {};
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [selectedServiceId, setSelectedServiceId] = useState("");
-    const [availableMechanics, setAvailableMechanics] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(initialSelectedServiceCategory ||"");
+    const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId || '');
+    const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName || '');
     const [availableSlots, setAvailableSlots] = useState([]);
     const [services, setServices] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -20,7 +32,7 @@ function Appointments() {
   const fetchAvailableTime = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/appointments/available-slots?date=${date}`
+        `${API_BASE_URL}/appointments/available_slots?date=${date}`
       );
 
       if (!response.ok) {
@@ -31,36 +43,23 @@ function Appointments() {
       const data = await response.json();
       setAvailableSlots(data.available_slot);
       setError(null);
+
     } catch (err) {
-      setError(err.message);
+      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
+        setError('Network error: Unable to reach the server. Please check your internet connection.');
+        toast.error('Network error: Unable to reach the server.');
+      } else{
+        setError(`server error: ${err.massage}`)
+        toast.error(`server error: ${err.message}`)
+      }
       setAvailableSlots([]);
     }
   }, [date]);
 
-  const fetchAvailableMechanics = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/appointments/available-mechanics?date=${date}&time=${time}`
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch data');
-      }
-
-      const data = await response.json();
-      setAvailableMechanics(data.available_mechanics);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      setAvailableMechanics([]);
-    }
-  }, [date, time]);
-
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/services/categories`);
+      const response = await fetch(`${API_BASE_URL}/services/categories`);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -70,8 +69,14 @@ function Appointments() {
       const data = await response.json();
       setCategories(data.categories);
       setError(null);
-    } catch (err) {
-      setError(err.message);
+    }catch (err) {
+      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
+        setError('Network error: Unable to reach the server. Please check your internet connection.');
+        toast.error('Network error: Unable to reach the server.');
+      } else{
+        setError(`server error: ${err.massage}`)
+        toast.error(`server error: ${err.message}`)
+      }
       setCategories([]);
     }
   }, []);
@@ -79,7 +84,8 @@ function Appointments() {
 
   const fetchServices = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/services/service_name`);
+      const queryParam = new URLSearchParams({selectedCategory}).toString()
+      const response = await fetch(`${API_BASE_URL}/services/category_service?${queryParam}`);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -90,7 +96,13 @@ function Appointments() {
       setServices(data.services);
       setError(null);
     } catch (err) {
-      setError(err.message);
+      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
+        setError('Network error: Unable to reach the server. Please check your internet connection.');
+        toast.error('Network error: Unable to reach the server.');
+      } else{
+        setError(`server error: ${err.massage}`)
+        toast.error(`server error: ${err.message}`)
+      }
       setServices([]);
     }
   }, []);
@@ -100,16 +112,47 @@ function Appointments() {
   }, [date, fetchAvailableTime]);
 
   useEffect(() => {
-    if (date && time) fetchAvailableMechanics();
-  }, [time,date, fetchAvailableMechanics]);
-
-  useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
   useEffect(() => {
     if (selectedCategory) fetchServices();
   }, [selectedCategory, fetchServices]);
+
+  useEffect (() => {
+    if(initialSelectedServiceCategory){
+      setSelectedCategory(initialSelectedServiceCategory)
+    }
+    if(initialSelectedServiceName){
+      setSelectedServiceName(initialSelectedServiceName)
+    }
+    if(initialSelectedServiceId){
+      setSelectedServiceId(initialSelectedServiceId)
+    }
+  }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId])
+
+  const handleServiceChange = (e) => {
+    const [id, name] = e.target.value.split('|');
+    setSelectedServiceId(id);
+    setSelectedServiceName(name);
+  };
+
+  const handleDateChange = (e) => {
+    const rawDate = new Date(e.target.value);
+    const formattedDate = format(rawDate, 'EEE, dd MMM yyyy');
+    setDate(formattedDate);
+  }
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value
+    if (validatePhoneNumber(value)){
+      setPhoneNumber(value)
+    }
+    else{
+      toast.error('Invalid phone number! Enter a 10-digit number.');
+    }
+  }
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,7 +166,7 @@ function Appointments() {
 
     try {
       const response = await fetch(
-        'http://localhost:3000/appointments/appointments',
+        `${API_BASE_URL}/appointments/appointments`,
         {
           method: 'POST',
           headers: {
@@ -140,9 +183,16 @@ function Appointments() {
 
       const result = await response.json();
       console.log('Appointment created successfully:', result);
-      alert('Appointment successfully created!');
+      toast.success('Appointment created successfully!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      toast.error(`Error: ${error.message}`);
     }
   };
 
@@ -150,7 +200,8 @@ function Appointments() {
   return (
     <header className='appointments'>
       <section>
-          {/* {error && <p className="error-message">{error}</p>} */}
+          <ToastContainer/>
+          {error && <p className="error-message">{error}</p>}
           <form onSubmit={handleSubmit} className='form-field'>
               <fieldset>
                   <div className={'customerDetails'}>
@@ -165,7 +216,7 @@ function Appointments() {
                       <div className='customerDetails-row' >
                           <label htmlFor='email' >Email</label>
                           <input id='email'
-                          type='text'
+                          type='email'
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required />
@@ -173,10 +224,12 @@ function Appointments() {
 
                       <div className='customerDetails-row' >
                           <label htmlFor='phoneNumber' >Phone</label>
-                          <input id='email'
+                          <input id='phoneNumber'
                           type='text'
+                          pattern="[0-9]{10}"
+                          title="Enter a valid 10-digit phone number"
                           value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          onChange={handlePhoneNumberChange}
                           required />
                       </div>
                   </div>
@@ -200,13 +253,16 @@ function Appointments() {
                     <div className='category-services-row'>
                       <label htmlFor='Service-Type'>Service Type </label>
                       <select id='Service-Type'
-                      value={selectedServiceId}
-                      onChange={(e) => setSelectedServiceId(e.target.value)}>
+                      value={`${selectedServiceId}|${selectedServiceName}`}
+                      onChange={handleServiceChange}
+                      >
                           <option className="option" value="">
                               -- Select services --
                           </option>
                           {services.map((service) => (
-                              <option className="option" key={service.service_id} value={service.service_id}>
+                              <option className="option" key={service.service_id}
+                                value={`${service.service_id}|${service.name}`}
+                              >
                                   {service.name}
                               </option>
                           ))}
@@ -214,7 +270,7 @@ function Appointments() {
                     </div>
                   </div>
 
-                  <div className='time-date' cla>
+                  <div className='time-date'>
                     <div className='time-date-row'>
                       <label htmlFor='date'>
                           Select date
@@ -222,8 +278,9 @@ function Appointments() {
                           <input
                           id='date'
                           type='date'
+                          min={new Date().toISOString().split('T')[0]}
                           value={date}
-                          onChange={(e) => setDate(e.target.value)}
+                          onChange={handleDateChange}
                           />
                     </div>
 
@@ -245,20 +302,8 @@ function Appointments() {
                       </select>
                     </div>
                   </div>
-
-                  <div className='available-mechanics'>
-                      <label htmlFor='select-mechanics'></label>
-                      <select id='select-mechanics' required>
-                          <option className="option"  value="">-- Select mechanics --</option>
-                              {availableMechanics.map((mechanics) => (
-                                  <option className="option" key= {mechanics.user_id} value={mechanics.user_name}>
-                                      {mechanics.user_name}
-                                  </option>
-                              ))}
-                      </select>
-                  </div>
-
               </fieldset>
+              <button type="submit" className="submit-button">Book Appointment</button>
           </form>
       </section>
     </header>

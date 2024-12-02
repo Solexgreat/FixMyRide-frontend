@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { fetchPopularService } from './APIs';
+import { useNavigate } from 'react-router-dom'
 // import { Swiper, SwiperSlide } from 'swiper/react';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
@@ -79,6 +80,7 @@ function PopularServices() {
 
 	const [popularServices, setPopularServices] = useState([])
 	const [error, setError] = useState(null)
+	const navigate = useNavigate();
 
 	const fetchServices = useCallback( async () => {
 		try{
@@ -94,6 +96,11 @@ function PopularServices() {
 	useEffect(() => {
 		fetchServices();
 	  }, [fetchServices]);
+
+
+	const handelServiceClick = (serviceId, serviceName, categoryName) => {
+		navigate('/appointments', { state: {selectServiceId: serviceId, selectServiceId: serviceName, selectCategory: categoryName, }});
+	}
 
 	var settings = {
     infinite: true,
@@ -127,7 +134,7 @@ function PopularServices() {
 			<Slider {...settings}>
 				{popularServices.map((service) => (
 					<a href={`#${ service.a}`}>
-						<div className='Card' key={service.service_id}>
+						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
 							<div className='image'>
 								<img src= {service.getImageSrc()} alt="" / >
 							</div>
