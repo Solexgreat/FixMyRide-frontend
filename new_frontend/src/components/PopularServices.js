@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { fetchPopularService } from './APIs';
 import { useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify';
 // import { Swiper, SwiperSlide } from 'swiper/react';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
@@ -11,39 +12,6 @@ import { useNavigate } from 'react-router-dom'
 // // import 'swiper/swiper-bundle.min.css';
 
 
-const popularServicesDetails = [
-	{
-		id: 1,
-		Name: "Oil Change",
-		Description: "Replacing the old engine oil and oil filter to ensure the engine runs smoothly and efficiently",
-		getImageSrc: () => require("../image/Oil-change.jpg"),
-		a: 'Oil Change'
-	},
-
-	{
-		id: 2,
-		Name: "Brake Repair and Replacement",
-		Description: "Inspection, repair, and replacement of brake pads, rotors, and calipers to maintain safe braking.",
-		getImageSrc: () => require("../image/Brake-Repair.jpg"),
-		a: 'Brake_Repair',
-	},
-
-	{
-		id: 3,
-		Name: "Battery Replacement",
-		Description: "Checking and replacing car batteries to ensure reliable engine starts and electrical performance",
-		getImageSrc: () => require("../image/Battery-Replacement.jpg"),
-		a: 'Battery Replacement'
-	},
-
-	{
-		id: 4,
-		Name: "Tire Rotation and Replacement",
-		Description: "Rotating tires to prevent uneven wear, and replacing tires when tread is worn down.",
-		getImageSrc: () => require("../image/Tire-Rotation.jpg"),
-		a: 'Battery Replacement'
-	}
-]
 
 const NextArrow = ({ onClick }) => (
     <div
@@ -79,16 +47,16 @@ const PrevArrow = ({ onClick }) => (
 function PopularServices() {
 
 	const [popularServices, setPopularServices] = useState([])
-	const [error, setError] = useState(null)
+	// const [error, setError] = useState(null)
 	const navigate = useNavigate();
 
 	const fetchServices = useCallback( async () => {
 		try{
 			const services = await fetchPopularService();
 			setPopularServices(services);
-			setError('')
+
 		} catch (err){
-			setError(err)
+			toast.error(err.message)
 			setPopularServices([])
 		}
 	}, [])
@@ -99,7 +67,7 @@ function PopularServices() {
 
 
 	const handelServiceClick = (serviceId, serviceName, categoryName) => {
-		navigate('/appointments', { state: {selectServiceId: serviceId, selectServiceId: serviceName, selectCategory: categoryName, }});
+		navigate('/appointments', { state: {selectServiceId: serviceId, selectServiceName: serviceName, selectCategory: categoryName, }});
 	}
 
 	var settings = {
@@ -115,17 +83,18 @@ function PopularServices() {
 	TouchMove: true,
   };
 	return (
-		<section className="popular-service">
+	<section className="popular-service">
+		<ToastContainer/>
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
 			{popularServices.map(service => (
 				<div className="Card" key={service.service_id}>
 					<div className='image'>
-						<img src={service.getImageSrc()} alt={service.title} />
+						<img src={require(`${service.image}`)} alt={service.title} />
 					</div>
 					<div className='card-text'>
 						<h3>{service.Name}</h3>
-						<p>{service.Description}</p>
+						<p>{service.description}</p>
 					</div>
 				</div>
 			))}

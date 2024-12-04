@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../Css-folder/Appointment.css'
 import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,6 +6,8 @@ import { API_BASE_URL } from '../constant';
 import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
 import { validatePhoneNumber } from '../utils/validationUtils';
+import { useFetch } from '../Hook/useFetch';
+import { fetchAvailableTime, fetchCategories, fetchServices } from './APIs';
 
 
 function Appointments() {
@@ -23,101 +25,23 @@ function Appointments() {
     const [selectedCategory, setSelectedCategory] = useState(initialSelectedServiceCategory ||"");
     const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId || '');
     const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName || '');
-    const [availableSlots, setAvailableSlots] = useState([]);
-    const [services, setServices] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
+    const {data: availableSlots, error: slotError, fetchData: localFetchAvailableSlots} = useFetch(fetchAvailableTime, [date])
+    const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetch(fetchCategories);
+    const {data: services, error: serviceError, fetchData: localFetchServices} = useFetch(fetchServices, [selectedCategory]);
 
 
-  const fetchAvailableTime = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/appointments/available_slots?date=${date}`
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch data');
-      }
-
-      const data = await response.json();
-      setAvailableSlots(data.available_slot);
-      setError(null);
-
-    } catch (err) {
-      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
-        setError('Network error: Unable to reach the server. Please check your internet connection.');
-        toast.error('Network error: Unable to reach the server.');
-      } else{
-        setError(`server error: ${err.massage}`)
-        toast.error(`server error: ${err.message}`)
-      }
-      setAvailableSlots([]);
-    }
-  }, [date]);
-
-
-  const fetchCategories = useCallback(async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/services/categories`);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch data');
-      }
-
-      const data = await response.json();
-      setCategories(data.categories);
-      setError(null);
-    }catch (err) {
-      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
-        setError('Network error: Unable to reach the server. Please check your internet connection.');
-        toast.error('Network error: Unable to reach the server.');
-      } else{
-        setError(`server error: ${err.massage}`)
-        toast.error(`server error: ${err.message}`)
-      }
-      setCategories([]);
-    }
-  }, []);
-
-
-  const fetchServices = useCallback(async () => {
-    try {
-      const queryParam = new URLSearchParams({selectedCategory}).toString()
-      const response = await fetch(`${API_BASE_URL}/services/category_service?${queryParam}`);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch data');
-      }
-
-      const data = await response.json();
-      setServices(data.services);
-      setError(null);
-    } catch (err) {
-      if(err.name == 'TypeError' && err.message == 'Failed to fetch'){
-        setError('Network error: Unable to reach the server. Please check your internet connection.');
-        toast.error('Network error: Unable to reach the server.');
-      } else{
-        setError(`server error: ${err.massage}`)
-        toast.error(`server error: ${err.message}`)
-      }
-      setServices([]);
-    }
-  }, []);
 
   useEffect(() => {
-    if (date) fetchAvailableTime();
-  }, [date, fetchAvailableTime]);
+    if (date) localFetchAvailableSlots(date);
+  }, [date, localFetchAvailableSlots]);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    localFetchCategories();
+  }, [localFetchCategories]);
 
   useEffect(() => {
-    if (selectedCategory) fetchServices();
-  }, [selectedCategory, fetchServices]);
+    if (selectedCategory) localFetchServices(selectedCategory);
+  }, [selectedCategory, localFetchServices]);
 
   useEffect (() => {
     if(initialSelectedServiceCategory){
@@ -130,6 +54,7 @@ function Appointments() {
       setSelectedServiceId(initialSelectedServiceId)
     }
   }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId])
+
 
   const handleServiceChange = (e) => {
     const [id, name] = e.target.value.split('|');
@@ -201,7 +126,6 @@ function Appointments() {
     <header className='appointments'>
       <section>
           <ToastContainer/>
-          {error && <p className="error-message">{error}</p>}
           <form onSubmit={handleSubmit} className='form-field'>
               <fieldset>
                   <div className={'customerDetails'}>
