@@ -23,15 +23,6 @@
 
 /* media query for screen < 479 */
 @media (max-width: 479px) {
-  .heroSection-carousel {
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 45vh;
-    position: relative;
-    background-color: #1b5b00; */
-  }
 
   .smallScreen{
    display: none;

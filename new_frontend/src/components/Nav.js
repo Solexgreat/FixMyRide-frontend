@@ -19,15 +19,15 @@ function Nav() {
 				{/* </a> */}
 
 				<ul>
-					<li><a href='#Home'>HOME</a></li>
-					<li><a href='#About'>ABOUT</a></li>
+					<li><Link to='/'>HOME</Link></li>
+					<li><Link to='/about'>ABOUT</Link></li>
 					<li><Link to='/services'>SERVICES</Link></li>
-					<li><a href='#Contact Us'>CONTACT</a></li>
+					<li><Link to='/contact'>CONTACT</Link></li>
 				</ul>
 
 				<div className="registration-btn">
-					<button>Sign in</button>
-					<button>Sign up</button>
+					<button><Link to='/login'>Login</Link></button>
+					<button><Link to='/sign-up'>Sign up</Link></button>
 				</div>
 			</div>
 
@@ -40,12 +40,12 @@ function Nav() {
 			</div>
 
 			<ul className={`nav-links ${menuOpen ? "visible": " "}`}>
-				<li><a href='#Home'>HOME</a></li>
-				<li><a href='#About'>ABOUT</a></li>
-				<li><a href='#Service'>SERVICES</a></li>
-				<li><a href='#Contact Us'>CONTACT</a></li>
-				<li><a href='#Sing in'>Sing in</a></li>
-				<li><a href='#Sing us'>Sing us</a></li>
+				<li><Link to='/'>HOME</Link></li>
+				<li><Link to='/about'>ABOUT</Link></li>
+				<li><Link to='/service'>SERVICES</Link></li>
+				<li><Link to='/contact'>CONTACT</Link></li>
+				<li><Link to='/Login'>Login</Link></li>
+				<li><Link to='/sign-up'>Sing up</Link></li>
 			</ul>
 		</nav>
 	)

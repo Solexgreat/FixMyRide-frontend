@@ -47,6 +47,10 @@ function Layout() {
         />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/services" element={<ServicePage />} />
+        {/* <Route path="/about" element={<ServicePage />} />
+        <Route path="/contact" element={<ServicePage />} />
+        <Route path="/login" element={<ServicePage />} />
+        <Route path="/sign-up" element={<ServicePage />} /> */}
       </Routes>
     </div>
   );

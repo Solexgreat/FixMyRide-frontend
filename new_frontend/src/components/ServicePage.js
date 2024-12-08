@@ -33,7 +33,7 @@ function ServicePage() {
     }, [categories]);
 
   const handleServiceClick = ({serviceId, servcieName, categoryName}) =>{
-    navigate('/appointments', {state: {selectedServiceId: serviceId, selectedSeerviceName: servcieName, category: categoryName}})
+    navigate('/appointments', {state: {selectedServiceId: serviceId, selectedSeerviceName: servcieName, selectedcategory: categoryName}})
   }
 
 
