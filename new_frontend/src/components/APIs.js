@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../constant'
 export async function fetchPopularService (){
   try{
     const response =  await fetch(
-      `${API_BASE_URL}http://localhost:5000/services/pupolar_services`
+      `${API_BASE_URL}/services/pupolar_services`
     )
 
     if (!response.ok) {
@@ -15,7 +15,7 @@ export async function fetchPopularService (){
     }
 
     const data = await response.json()
-    return data.services
+    return data
   } catch (err) {
     throw new Error (err.error);
   }
@@ -40,8 +40,9 @@ export async function fetchCategories() {
 }
 
 export async function fetchServices(selectedCategory) {
-  const queryParam = new URLSearchParams({ selectedCategory }).toString();
-  const response = await fetch(`${API_BASE_URL}/services/category_service?${queryParam}`);
+  const category = selectedCategory;
+  const queryParam = new URLSearchParams({category}).toString();
+  const response = await fetch(`${API_BASE_URL}/services/category_services?${queryParam}`);
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to fetch data');

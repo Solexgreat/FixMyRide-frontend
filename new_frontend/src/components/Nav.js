@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import { Link } from 'react-router-dom';
 
 function Nav() {
 	const[menuOpen, setMenuOpen] = useState(false);
@@ -20,7 +21,7 @@ function Nav() {
 				<ul>
 					<li><a href='#Home'>HOME</a></li>
 					<li><a href='#About'>ABOUT</a></li>
-					<li><a href='#Service'>SERVICES</a></li>
+					<li><Link to='/services'>SERVICES</Link></li>
 					<li><a href='#Contact Us'>CONTACT</a></li>
 				</ul>
 

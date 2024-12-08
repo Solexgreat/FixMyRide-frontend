@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
-import { fetchCategories, fetchServices } from './APIs';
-import { useFetch } from '../Hook/useFetch';
+import { useEffect, useState } from 'react'
+import { fetchServices } from './APIs';
+import { useFetchCategories } from '../Hook/useFetch';
+import '../Css-folder/servicePage.css'
 
-function servicePage() {
+function ServicePage() {
   const [servciesByCategory, setServciesByCategory] = useState({});
-  const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetch(fetchCategories);
+  const {data: categories = [], error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
 
   useEffect(() => {
     localFetchCategories();
@@ -12,15 +13,16 @@ function servicePage() {
 
   useEffect(() => {
     const fetchAllservices = async () => {
-      if (categories && categories.length > 0){
-        const servicePromise = await categories.map(async (category) =>{
+      if (categories.length > 0){
+        const servicePromise = categories.map(async (category) =>{
           const services = await fetchServices(category);
           return {category, services}
         });
         const allPromises = await Promise.all(servicePromise);
         const servicesMap = allPromises.reduce(( acc, {category, services}) =>{
           acc[category] = services
-        })
+          return acc
+        }, {})
         setServciesByCategory(servicesMap)
       }
     }
@@ -29,23 +31,22 @@ function servicePage() {
 
 
   return (
-    <header>
+    <header className='servicePage'>
       <h1>Services</h1>
         {categories.map((category, index) => (
-          <section>
+          <section className='service_category'>
             <h2>
               {category}
             </h2>
-            <div className='servcies'>
+            <div className='services'>
               {
-                servciesByCategory[category] &&
-                servciesByCategory[category].map((service) => (
+                servciesByCategory[category]?.map((service, index) => (
                 <div className='service-card'>
                   <div className='service-cardImage'>
-                    <img src={require(`${service.image}`)} alt={service.title} />
+                    <img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
                   </div>
                   <div className='service-cardText'>
-                   <h3>{service.Name}</h3>
+                   <h3>{service.name}</h3>
                    <p>{service.description}</p>
                   </div>
                 </div>
@@ -58,4 +59,4 @@ function servicePage() {
   )
 }
 
-export default servicePage
+export default ServicePage

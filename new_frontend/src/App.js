@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import {Routes,  Route, useLocation } from 'react-router-dom';
 import HeroSection from './components/HeroSection';
 import Appointments from './components/Appointments';
+import ServicePage from './components/ServicePage';
 
 
 function App() {
@@ -29,24 +30,23 @@ function App() {
 function Layout() {
   const location = useLocation();
 
-  const isAppointmentsPage = location.pathname === '/appointments';
-
   return (
     <div>
-      {/* Show the header and main content only if NoT
-      on the appointments page*/}
-      {!isAppointmentsPage && (
-        <>
-          <HeroSection />
-          <PopularServices/>
-          <WhyChooseUs/>
-          <TestimonialSection/>
-        </>
-      )}
-
       <Routes>
-        {/* <Route path='/' element={<HeroSection/>}></Route> */}
-        <Route path='/appointments' element={<Appointments/>}></Route>
+
+        <Route
+          path="/"
+          element={
+            <>
+              <HeroSection />
+              <PopularServices />
+              <WhyChooseUs />
+              <TestimonialSection />
+            </>
+          }
+        />
+        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/services" element={<ServicePage />} />
       </Routes>
     </div>
   );

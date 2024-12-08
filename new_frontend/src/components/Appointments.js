@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../Css-folder/Appointment.css'
 import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,9 +6,10 @@ import { API_BASE_URL } from '../constant';
 import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
 import { validatePhoneNumber } from '../utils/validationUtils';
-import { useFetch } from '../Hook/useFetch';
-import { fetchAvailableTime, fetchCategories, fetchServices } from './APIs';
+import{ useFetchCategories, useFetchAvailableTimeSlot, useFetchServices}  from '../Hook/useFetch';
 
+
+// console.log('fetchAvailableTime:', fetchAvailableTime);
 
 function Appointments() {
     const location = useLocation();
@@ -20,19 +21,20 @@ function Appointments() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [date, setDate] = useState("");
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [time, setTime] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(initialSelectedServiceCategory ||"");
     const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId || '');
     const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName || '');
-    const {data: availableSlots, error: slotError, fetchData: localFetchAvailableSlots} = useFetch(fetchAvailableTime, [date])
-    const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetch(fetchCategories);
-    const {data: services, error: serviceError, fetchData: localFetchServices} = useFetch(fetchServices, [selectedCategory]);
+    const {data: availableSlots, error: slotError, fetchData: localFetchAvailableSlots} = useFetchAvailableTimeSlot([date])
+    const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
+    const {data: services, error: serviceError, fetchData: localFetchServices} = useFetchServices([selectedCategory]);
 
 
 
   useEffect(() => {
     if (date) localFetchAvailableSlots(date);
+    console.log('categories:', availableSlots);
   }, [date, localFetchAvailableSlots]);
 
   useEffect(() => {

@@ -54,12 +54,14 @@ function PopularServices() {
 		try{
 			const services = await fetchPopularService();
 			setPopularServices(services);
+			console.log('services:', services)
 
 		} catch (err){
 			toast.error(err.message)
 			setPopularServices([])
 		}
 	}, [])
+
 
 	useEffect(() => {
 		fetchServices();
@@ -90,10 +92,10 @@ function PopularServices() {
 			{popularServices.map(service => (
 				<div className="Card" key={service.service_id}>
 					<div className='image'>
-						<img src={require(`${service.image}`)} alt={service.title} />
+						<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
 					</div>
 					<div className='card-text'>
-						<h3>{service.Name}</h3>
+						<h3>{service.name}</h3>
 						<p>{service.description}</p>
 					</div>
 				</div>
@@ -105,11 +107,11 @@ function PopularServices() {
 					<a href={`#${ service.a}`}>
 						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
 							<div className='image'>
-								<img src= {service.getImageSrc()} alt="" / >
+								<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt="" / >
 							</div>
 							<div className='card-text'>
-								<h3>{service.Name}</h3>
-								<p>{service.Description}</p>
+								<h3>{service.name}</h3>
+								<p>{service.description}</p>
 							</div>
 						</div>
 					</a>
