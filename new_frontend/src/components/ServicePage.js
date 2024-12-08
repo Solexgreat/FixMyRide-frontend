@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { fetchServices } from './APIs';
 import { useFetchCategories } from '../Hook/useFetch';
+import { useNavigate } from 'react-router-dom'
 import '../Css-folder/servicePage.css'
 
 function ServicePage() {
   const [servciesByCategory, setServciesByCategory] = useState({});
   const {data: categories = [], error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
+	const navigate = useNavigate();
+
 
   useEffect(() => {
     localFetchCategories();
@@ -29,6 +32,10 @@ function ServicePage() {
     fetchAllservices();
     }, [categories]);
 
+  const handleServiceClick = ({serviceId, servcieName, categoryName}) =>{
+    navigate('/appointments', {state: {selectedServiceId: serviceId, selectedSeerviceName: servcieName, category: categoryName}})
+  }
+
 
   return (
     <header className='servicePage'>
@@ -41,7 +48,7 @@ function ServicePage() {
             <div className='services'>
               {
                 servciesByCategory[category]?.map((service, index) => (
-                <div className='service-card'>
+                <div className='service-card' onClick={handleServiceClick(service.service_id, service.name, category)}>
                   <div className='service-cardImage'>
                     <img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
                   </div>

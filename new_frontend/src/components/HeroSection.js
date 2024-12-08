@@ -1,14 +1,14 @@
 import React from 'react'
 // import ReactDOM from 'react-dom';
 import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Link } from 'react-router-dom';
 
 
 const slides = [
 	{
 		id: 1,
-		getImageSrc: () => require("../image/slide 1.jpg"),
+		getImageSrc: () => require("../images/slide 1.jpg"),
 		header: 'Book Your Car Repair in Minutes!',
 		text: 'Easily schedule appointments with trusted mechanics at your convenience',
 		btn: 'Book an Appointment'
@@ -16,7 +16,7 @@ const slides = [
 
 	{
 		id: 2,
-		getImageSrc: () => require("../image/slide 2.jpg"),
+		getImageSrc: () => require("../images/slide 2.jpg"),
 		header: 'Professional Service from Ceritified Mechanics',
 		text: 'Your vehicle is in good hands with our team of skilled professionals',
 		btn: 'Meet Our Team'
@@ -24,7 +24,7 @@ const slides = [
 
 	{
 		id: 3,
-		getImageSrc: () => require("../image/slide 3.jpg"),
+		getImageSrc: () => require("../images/slide 3.jpg"),
 		header: 'No Surprises-Trasparent Pricing',
 		text: 'View pricing upfront and manage payments effortlessly through the app',
 		btn: 'View Service & Pricing'
@@ -57,7 +57,7 @@ function HeroSection() {
 				{/* Lager screen */}
 				<div className='heroSection-carousel'>
 					<div className='smallScreen'>
-						<img src= {require("../image/slide 1.jpg")} alt='Hero-image' />
+						<img src= {require("../images/slide 1.jpg")} alt='Hero-image' />
 						<div className='Hero-text'>
 								<h1>Book Your Car Repair in Minutes!</h1>
 								<p>Easily schedule appointments with trusted mechanics at your convenience</p>

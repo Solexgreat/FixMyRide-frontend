@@ -104,7 +104,6 @@ function PopularServices() {
 		<div className='slider'>
 			<Slider {...settings}>
 				{popularServices.map((service) => (
-					<a href={`#${ service.a}`}>
 						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
 							<div className='image'>
 								<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt="" / >
@@ -114,7 +113,6 @@ function PopularServices() {
 								<p>{service.description}</p>
 							</div>
 						</div>
-					</a>
 				))}
 			</Slider>
 		</div>
