@@ -1,39 +1,61 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { fetchServices } from './APIs';
 import { useFetchCategories } from '../Hook/useFetch';
 import { useNavigate } from 'react-router-dom'
 import '../Css-folder/servicePage.css'
 
 function ServicePage() {
-  const [servciesByCategory, setServciesByCategory] = useState({});
+  const [servicesByCategory, setServicesByCategory] = useState({});
+  const [loading, setLoading] = useState(true);
   const {data: categories = [], error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
 	const navigate = useNavigate();
 
 
-  useEffect(() => {
-    localFetchCategories();
-  }, [localFetchCategories]);
+  // Cache services to avoid re-fetching
+  const cachedServices = useMemo(() => servicesByCategory, [servicesByCategory]);
 
   useEffect(() => {
-    const fetchAllservices = async () => {
-      if (categories.length > 0){
-        const servicePromise = categories.map(async (category) =>{
-          const services = await fetchServices(category);
-          return {category, services}
-        });
-        const allPromises = await Promise.all(servicePromise);
-        const servicesMap = allPromises.reduce(( acc, {category, services}) =>{
-          acc[category] = services
-          return acc
-        }, {})
-        setServciesByCategory(servicesMap)
+    const fetchAllData = async () => {
+      setLoading(true);
+
+      try {
+
+        // Check if categories are already available in state or localStorage
+        if (categories.length === 0) {
+          // If categories are not available, call localFetchCategories
+          await localFetchCategories();
+        }
+
+        // Fetch services if categories exist
+        if (categories.length > 0) {
+          const servicePromises = categories.map(async (category) => {
+            if (cachedServices[category]) {
+              return { category, services: cachedServices[category] }; // Use cached data
+            }
+            const services = await fetchServices(category);
+            return { category, services };
+          });
+
+          const allPromises = await Promise.all(servicePromises);
+          const servicesMap = allPromises.reduce((acc, { category, services }) => {
+            acc[category] = services;
+            return acc;
+          }, {});
+
+          setServicesByCategory(servicesMap);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-    fetchAllservices();
-    }, [categories]);
+    };
+
+    fetchAllData();
+  }, [categories, cachedServices, localFetchCategories]);
 
   const handleServiceClick = ({serviceId, servcieName, categoryName}) =>{
-    navigate('/appointments', {state: {selectedServiceId: serviceId, selectedSeerviceName: servcieName, selectedcategory: categoryName}})
+    navigate('/appointments', {state: {selectedServiceId: serviceId, selectedServiceName: servcieName, selectedServiceCategory: categoryName}})
   }
 
 
@@ -47,8 +69,8 @@ function ServicePage() {
             </h2>
             <div className='services'>
               {
-                servciesByCategory[category]?.map((service, index) => (
-                <div className='service-card' onClick={handleServiceClick(service.service_id, service.name, category)}>
+                servicesByCategory[category]?.map((service, index) => (
+                <div className='service-card' onClick={()=> handleServiceClick(service.service_id, service.name, category)}>
                   <div className='service-cardImage'>
                     <img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
                   </div>

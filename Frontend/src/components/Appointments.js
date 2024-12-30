@@ -31,10 +31,8 @@ function Appointments() {
     const {data: services, error: serviceError, fetchData: localFetchServices} = useFetchServices([selectedCategory]);
 
 
-
   useEffect(() => {
     if (date) localFetchAvailableSlots(date);
-    console.log('categories:', availableSlots);
   }, [date, localFetchAvailableSlots]);
 
   useEffect(() => {
@@ -56,7 +54,6 @@ function Appointments() {
       setSelectedServiceId(initialSelectedServiceId)
     }
   }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId])
-
 
   const handleServiceChange = (e) => {
     const [id, name] = e.target.value.split('|');
@@ -228,8 +225,8 @@ function Appointments() {
                       </select>
                     </div>
                   </div>
+                <button type="submit" className="submit-button">Book Appointment</button>
               </fieldset>
-              <button type="submit" className="submit-button">Book Appointment</button>
           </form>
       </section>
     </header>

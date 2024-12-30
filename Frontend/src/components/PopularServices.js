@@ -69,7 +69,8 @@ function PopularServices() {
 
 
 	const handelServiceClick = (serviceId, serviceName, categoryName) => {
-		navigate('/appointments', { state: {selectServiceId: serviceId, selectServiceName: serviceName, selectCategory: categoryName, }});
+		console.log({ serviceId, serviceName, categoryName });
+		navigate('/appointments', { state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, }});
 	}
 
 	var settings = {
@@ -90,7 +91,7 @@ function PopularServices() {
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
 			{popularServices.map(service => (
-				<div className="Card" key={service.service_id}>
+				<div className="Card" key={service.service_id} onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
 					<div className='image'>
 						<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
 					</div>
