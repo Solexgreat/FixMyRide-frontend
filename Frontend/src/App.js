@@ -8,6 +8,7 @@ import './Css-folder/TestimonialSection.css';
 import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import Nav from './components/Nav';
+import Layout from './components/Layout';
 
 
 
