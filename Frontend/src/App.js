@@ -15,10 +15,9 @@ import Nav from './components/Nav';
 function App() {
   return (
     <div className='container'>
-      <Dashboard/>
-      {/* <Nav/>
+      <Nav/>
       <Layout/>
-      <Footer/> */}
+      <Footer/>
     </div>
 );
 }

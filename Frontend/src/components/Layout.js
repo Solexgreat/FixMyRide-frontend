@@ -10,6 +10,7 @@ import Appointments from './components/Appointments';
 import ServicePage from './components/ServicePage';
 import ProtectedRoute from "../context/ProtectedRoute";
 import Dashboard from "./Dashboard";
+import Login from "./Login";
 
 
  function Layout() {
@@ -48,9 +49,9 @@ import Dashboard from "./Dashboard";
                <AppointmentsTable/>
             </ProtectedRoute>
             }/>
+          <Route path="/login" element={<Login/>} />
           {/* <Route path="/about" element={<ServicePage />} />
           <Route path="/contact" element={<ServicePage />} />
-          <Route path="/login" element={<ServicePage />} />
           <Route path="/sign-up" element={<ServicePage />} /> */}
         </Routes>
       </div>

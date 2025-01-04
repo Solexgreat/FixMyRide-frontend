@@ -1,8 +1,13 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Icons } from 'react-toastify';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
-function Nav() {
+
+function Nav({username}) {
 	const[menuOpen, setMenuOpen] = useState(false);
+	const {isLoggedIn} = useAuth()
 
 
 	const toggleMenu = () => {
@@ -14,10 +19,6 @@ function Nav() {
 				<h1>FixMyRide</h1>
 			</Link>
 			<div className="nav-desktop">
-				{/* <a href='/' className="logo"> */}
-					{/* <h1>FixMyRide</h1> */}
-				{/* </a> */}
-
 				<ul>
 					<li><Link to='/'>HOME</Link></li>
 					<li><Link to='/about'>ABOUT</Link></li>
@@ -25,10 +26,19 @@ function Nav() {
 					<li><Link to='/contact'>CONTACT</Link></li>
 				</ul>
 
-				<div className="registration-btn">
-					<button><Link to='/login' className='link-btn'>Login</Link></button>
-					<button><Link to='/sign-up' className='link-btn' >Sign up</Link></button>
-				</div>
+				{isLoggedIn ? (
+					<div className='flex item-center space-x-4'>
+						<span className='text-lg'>welcome, {username}</span>
+						<div>
+							<Link to='/dashboard'><i className='fas fa-user-cycle text-2xl'></i></Link>
+						</div>
+					</div>
+				) : (
+					<div className="registration-btn">
+						<button><Link to='/login' className='link-btn'>Login</Link></button>
+						<button><Link to='/sign-up' className='link-btn' >Sign up</Link></button>
+					</div>
+				)}
 			</div>
 
 			{/*mobile menu*/}

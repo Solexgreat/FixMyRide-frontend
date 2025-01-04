@@ -2,7 +2,107 @@ import { toast } from 'react-toastify'
 import { API_BASE_URL } from '../constant'
 
 
+export async function fetchAllRevenues () {
 
+  const token =  localStorage.getItem('sessionToken')
+
+  try{
+    const response = await fetch(`${API_BASE_URL}/revenues/`, {
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      }
+    })
+
+    if (!response.ok){
+      const errorData = await response.json()
+      toast.error(errorData.message || 'Failed to fetch revenues history')
+    }
+
+    const result = await response.json()
+    return result
+
+  } catch (error){
+    toast.error(error.message || 'An error when fetching revenues history')
+  }
+}
+
+export async function fetchAllRevenuesBetween ({startDate, endDate}) {
+  const token =  localStorage.getItem('sessionToken')
+  const qeuryDate = {
+    initial_date: startDate,
+    current_date: endDate,
+  }
+  try{
+    const response = await fetch(`${API_BASE_URL}/revenues/history_between`, {
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      },
+      body: JSON.stringify(qeuryDate)
+    })
+
+    if (!response.ok){
+      const errorData = await response.json()
+      toast.error(errorData.message || 'Failed to fetch revenues history')
+    }
+
+    const result = await response.json()
+    return result
+
+  } catch (error){
+    toast.error(error.message || 'An error when fetching revenues history')
+  }
+}
+
+export async function fetchAllAppointments () {
+
+  const token =  localStorage.getItem('sessionToken')
+
+  try{
+    const response = await fetch(`${API_BASE_URL}/appointments/`, {
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      }
+    })
+
+    if (!response.ok){
+      const errorData = await response.json()
+      toast.error(errorData.message || 'Failed to fetch revenues history')
+    }
+
+    const result = await response.json()
+    return result
+
+  } catch (error){
+    toast.error(error.message || 'An error when fetching revenues history')
+  }
+}
+
+export async function fetchAllAppointmentsBetween ({startDate, endDate}) {
+  const token =  localStorage.getItem('sessionToken')
+  const qeuryDate = {
+    initial_date: startDate,
+    current_date: endDate,
+  }
+  try{
+    const response = await fetch(`${API_BASE_URL}/appointments/history_between`, {
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      },
+      body: JSON.stringify(qeuryDate)
+    })
+
+    if (!response.ok){
+      const errorData = await response.json()
+      toast.error(errorData.message || 'Failed to fetch appointments history')
+    }
+
+    const result = await response.json()
+    return result
+
+  } catch (error){
+    toast.error(error.message || 'An error when fetching appointments history')
+  }
+}
 
 export async function fetchPopularService (){
   try{
