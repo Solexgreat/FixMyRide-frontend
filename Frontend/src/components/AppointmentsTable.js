@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFetchAllAppointments, useFetchAllAppointmentsBetween } from '../Hook/useFetch'
 
 function AppointmentsTable({filterDate}) {
