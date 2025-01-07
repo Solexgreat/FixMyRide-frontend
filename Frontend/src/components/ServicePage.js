@@ -54,7 +54,7 @@ function ServicePage() {
     fetchAllData();
   }, [categories, cachedServices, localFetchCategories]);
 
-  const handleServiceClick = ({serviceId, servcieName, categoryName}) =>{
+  const handleServiceClick = (serviceId, servcieName, categoryName) =>{
     navigate('/appointments', {state: {selectedServiceId: serviceId, selectedServiceName: servcieName, selectedServiceCategory: categoryName}})
   }
 
@@ -70,7 +70,7 @@ function ServicePage() {
             <div className='services'>
               {
                 servicesByCategory[category]?.map((service, index) => (
-                <div className='service-card' onClick={()=> handleServiceClick(service.service_id, service.name, category)}>
+                <div className='service-card' onClick={()=> handleServiceClick(service.service_id, service.name, service.category)}>
                   <div className='service-cardImage'>
                     <img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
                   </div>

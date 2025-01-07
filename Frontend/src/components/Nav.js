@@ -1,13 +1,12 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Icons } from 'react-toastify';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 function Nav({username}) {
 	const[menuOpen, setMenuOpen] = useState(false);
-	const {isLoggedIn} = useAuth()
+	const{isLoggedIn} = useAuth()
 
 
 	const toggleMenu = () => {

@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import Nav from './components/Nav';
 import Layout from './components/Layout';
+import { AuthProvide } from './context/AuthContext';
 
 
 
@@ -16,7 +17,9 @@ import Layout from './components/Layout';
 function App() {
   return (
     <div className='container'>
-      <Nav/>
+      <AuthProvide>
+        <Nav/>
+      </AuthProvide>
       <Layout/>
       <Footer/>
     </div>

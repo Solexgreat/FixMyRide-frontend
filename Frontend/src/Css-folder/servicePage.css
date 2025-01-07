@@ -27,6 +27,8 @@
 }
 
 .service_category h2{
+    font-weight: 500;
+    font-size: 2rem;
     margin: 2rem 4rem;
 }
 
@@ -95,7 +97,7 @@
     height: 200px;
 }
 
-.service-cardImage h3{
+.service-cardText h3{
     font-size: 1.5rem;
     font-weight: 800;
 }

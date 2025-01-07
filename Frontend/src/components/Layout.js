@@ -1,4 +1,5 @@
  import React from "react"
+import '../Css-folder/Appointment.css';
 import WhyChooseUs from './WhyChooseUs';
 import TestimonialSection from './TestimonialSection';
 import PopularServices from './PopularServices';
@@ -11,6 +12,7 @@ import ServicePage from './ServicePage';
 import ProtectedRoute from "../context/ProtectedRoute";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
+import CheckOutDialogBox from "./CheckOutDialogBox";
 
 
  function Layout() {
@@ -50,9 +52,8 @@ import Login from "./Login";
             </ProtectedRoute>
             }/>
           <Route path="/login" element={<Login/>} />
-          {/* <Route path="/about" element={<ServicePage />} />
-          <Route path="/contact" element={<ServicePage />} />
-          <Route path="/sign-up" element={<ServicePage />} /> */}
+          {/* <Route path="/contact" element={<ServicePage />} />
+          <Route path="/sign-up" element={<ServicePage />} />  */}
         </Routes>
       </div>
     );

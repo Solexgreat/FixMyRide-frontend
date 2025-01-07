@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
 import '../Css-folder/Appointment.css'
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { API_BASE_URL } from '../constant';
 import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
 import { validatePhoneNumber } from '../utils/validationUtils';
 import{ useFetchCategories, useFetchAvailableTimeSlot, useFetchServices}  from '../Hook/useFetch';
+import { useAuth } from '../context/AuthContext';
+import CheckOutPage from './CheckOutButton';
+import CheckOutButton from './CheckOutButton';
+import CheckOutDialogBox from './CheckOutDialogBox';
 
 
 // console.log('fetchAvailableTime:', fetchAvailableTime);
@@ -18,7 +22,8 @@ function Appointments() {
       selectedServiceName: initialSelectedServiceName,
       selectedServiceCategory: initialSelectedServiceCategory,
     } = location.state || {};
-    const [name, setName] = useState('');
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedServicePrice, setSelectedServicePrice] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -56,9 +61,10 @@ function Appointments() {
   }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId])
 
   const handleServiceChange = (e) => {
-    const [id, name] = e.target.value.split('|');
+    const [id, name, price] = e.target.value.split('|');
     setSelectedServiceId(id);
     setSelectedServiceName(name);
+    setSelectedServicePrice(price);
   };
 
   const handleDateChange = (e) => {
@@ -67,14 +73,34 @@ function Appointments() {
     setDate(formattedDate);
   }
 
-  const handlePhoneNumberChange = (e) => {
-    const value = e.target.value
-    if (validatePhoneNumber(value)){
-      setPhoneNumber(value)
+  // const handlePhoneNumberChange = (e) => {
+  //   const value = e.target.value.replace(/[^0-9]/g, "") //remove non numeric
+  //   console.log("Input value:", value);
+  //   setPhoneNumber(value);
+
+  //   if (value.length === 10 && !validatePhoneNumber(value)){
+  //     toast.error('Invalid phone number! Enter a 10-digit number.');
+  //   }
+  // }
+
+  const handleBookAppointment = (e) => {
+    e.preventDefault();
+    if (!selectedCategory) {
+      toast.error('Please select a category.');
+      return;
     }
-    else{
-      toast.error('Invalid phone number! Enter a 10-digit number.');
+
+    if (!selectedServiceName) {
+      toast.error('Please select a service.');
+      return;
     }
+
+    if(!time){
+      toast.error('Please select a convinent time.');
+      return
+    }
+
+    setIsDialogOpen(true);
   }
 
 
@@ -125,38 +151,8 @@ function Appointments() {
     <header className='appointments'>
       <section>
           <ToastContainer/>
-          <form onSubmit={handleSubmit} className='form-field'>
+          <form className='form-field'>
               <fieldset>
-                  <div className={'customerDetails'}>
-                      <div className='customerDetails-row'>
-                          <label htmlFor='Name' >Name</label>
-                          <input id='Name'
-                          type='text'
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}  required />
-                      </div>
-
-                      <div className='customerDetails-row' >
-                          <label htmlFor='email' >Email</label>
-                          <input id='email'
-                          type='email'
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required />
-                      </div>
-
-                      <div className='customerDetails-row' >
-                          <label htmlFor='phoneNumber' >Phone</label>
-                          <input id='phoneNumber'
-                          type='text'
-                          pattern="[0-9]{10}"
-                          title="Enter a valid 10-digit phone number"
-                          value={phoneNumber}
-                          onChange={handlePhoneNumberChange}
-                          required />
-                      </div>
-                  </div>
-
                   <div className='category-services'>
                     <div className='category-services-row'>
                       <label htmlFor='category'> Category </label>
@@ -176,7 +172,7 @@ function Appointments() {
                     <div className='category-services-row'>
                       <label htmlFor='Service-Type'>Service Type </label>
                       <select id='Service-Type'
-                      value={`${selectedServiceId}|${selectedServiceName}`}
+                      value={`${selectedServiceId}|${selectedServiceName}|${selectedServicePrice}`}
                       onChange={handleServiceChange}
                       >
                           <option className="option" value="">
@@ -184,7 +180,7 @@ function Appointments() {
                           </option>
                           {services.map((service) => (
                               <option className="option" key={service.service_id}
-                                value={`${service.service_id}|${service.name}`}
+                                value={`${service.service_id}|${service.name}|${service.price}`}
                               >
                                   {service.name}
                               </option>
@@ -225,10 +221,22 @@ function Appointments() {
                       </select>
                     </div>
                   </div>
-                <button type="submit" className="submit-button">Book Appointment</button>
+                <button type="submit" className="submit-button"
+                onClick={handleBookAppointment}
+                >
+                Book Appointment
+                </button>
               </fieldset>
           </form>
       </section>
+      <div>
+        <CheckOutDialogBox handleSubmit={handleSubmit}
+        isOpen={isDialogOpen}
+        onClose={ () => setIsDialogOpen(false)}
+        price={selectedServicePrice}
+        description={selectedServiceName}
+        />
+      </div>
     </header>
   )
 }
