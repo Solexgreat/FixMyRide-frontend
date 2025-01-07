@@ -9,7 +9,7 @@ function CheckOutButton({price, description}) {
 
     const handleCheckout = async () => {
         try{
-            const response = await fetch(`${API_BASE_URL}/payment/checkout-session`, {
+            const response = await fetch(`${API_BASE_URL}/payments/checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
