@@ -73,15 +73,6 @@ function Appointments() {
     setDate(formattedDate);
   }
 
-  // const handlePhoneNumberChange = (e) => {
-  //   const value = e.target.value.replace(/[^0-9]/g, "") //remove non numeric
-  //   console.log("Input value:", value);
-  //   setPhoneNumber(value);
-
-  //   if (value.length === 10 && !validatePhoneNumber(value)){
-  //     toast.error('Invalid phone number! Enter a 10-digit number.');
-  //   }
-  // }
 
   const handleBookAppointment = (e) => {
     e.preventDefault();

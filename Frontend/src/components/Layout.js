@@ -13,6 +13,8 @@ import ProtectedRoute from "../context/ProtectedRoute";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
 import CheckOutDialogBox from "./CheckOutDialogBox";
+// import Signup from "./Signup";
+import ContactPage from "./ContactPage";
 
 
  function Layout() {
@@ -52,8 +54,8 @@ import CheckOutDialogBox from "./CheckOutDialogBox";
             </ProtectedRoute>
             }/>
           <Route path="/login" element={<Login/>} />
-          {/* <Route path="/contact" element={<ServicePage />} />
-          <Route path="/sign-up" element={<ServicePage />} />  */}
+          <Route path="/contact" element={<ContactPage />} />
+          {/* <Route path="/sign-up" element={<Signup />} /> */}
         </Routes>
       </div>
     );
