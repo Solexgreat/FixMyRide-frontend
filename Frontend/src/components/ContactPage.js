@@ -17,7 +17,7 @@ function ContactPage() {
     <header className="bg-[#F5F5F5] py-10">
        <div className='flex flex-col items-center justify-center'>
         <h1 className='text-4xl font-bold mb-2'>Contact Us</h1>
-        <p className='text-lg italic text-gray-600 mb-2'>Let's get your car back on road... </p>
+        <p className='text-lg italic text-gray-600 mb-6'>Let's get your car back on road... </p>
        </div>
 
          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 px-4 mb-6">

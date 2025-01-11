@@ -22,7 +22,7 @@
 	padding:0 1rem;
   }
 
-  a, Link {
+   a {
 	color: #06067F;
 	text-decoration: none;
 	font-weight: 600;
@@ -39,22 +39,46 @@
   .registration-btn {
 	display: flex;
 	gap: 1rem;
+	color: white;
   }
 
-  .registration-btn button .link-btn{
+  /* .registration-btn button .link-btn{
 	padding: 0.5rem 2rem;
 	background-color: #002B5B;
 	color: white;
+	border: none;
+  } */
+
+  .registration-btn .sign-up {
+	padding: 0.5rem 2rem;
+	background-color: #002B5B;
+	color: white;
+	padding: 0.5rem 2rem;
 	border-radius: 16px;
 	border: none;
   }
 
-  .registration-btn button {
+  .registration-btn button:hover{
+	background-color: white;
+	border:#002B5B solid 1px;
+	color: #002B5B;
+  }
+
+
+  .login-btn #login-btn {
 	padding: 0.5rem 2rem;
-	background-color: #002B5B;
-	color: white;
-	border-radius: 16px;
+	background-color: none;
+	padding: 0.5rem 2rem;
 	border: none;
+	color: #002B5B;
+  }
+
+  .login-btn #login-btn:hover{
+	background-color: none;
+	padding: 0.5rem 2rem;
+	border: #002B5B solid 1px;
+	border-radius: 16px;
+	color: #002B5B;
   }
 
   /* .link-btn{

@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-import { toast } from 'react-toastify'
 import { createAppointment, fetchAllAppointments, fetchAllAppointmentsBetween, fetchAllRevenues, fetchAllRevenuesBetween, fetchAvailableTime, fetchCategories, fetchServices } from '../components/APIs';
 
 
@@ -13,7 +12,7 @@ export function useFetchAllRevenues ({deps=[]}) {
             setData(result)
             console.log('result', result)
         } catch (error) {
-            toast.error(error)
+            console.error(error)
         }
     }, deps)
 
@@ -32,7 +31,7 @@ export function useFetchAllRevenuesBetween ({deps=[]}) {
             setData(result)
             console.log('result', result)
         } catch (error) {
-            toast.error(error)
+            console.error(error)
         }
     }, deps)
 
@@ -51,7 +50,7 @@ export function useFetchAllAppointments ({deps=[]}) {
             setData(result)
             console.log('result', result)
         } catch (error) {
-            toast.error(error)
+            console.error(error)
         }
     }, deps)
 
@@ -70,7 +69,7 @@ export function useFetchAllAppointmentsBetween ({deps=[]}) {
             setData(result)
             console.log('result', result)
         } catch (error) {
-            toast.error(error)
+            console.error(error)
         }
     }, deps)
 
@@ -93,7 +92,7 @@ export function useFetchCategories ({deps=[]}) {
             setError()
         } catch (err) {
             setError(err.message ||"An error occured")
-            toast.error(err.message ||"An error occured")
+            console.error(err.message ||"An error occured")
         }
     }, deps)
 
@@ -116,7 +115,7 @@ export function useFetchAvailableTimeSlot ({deps=[]}) {
           setError()
       } catch (err) {
           setError(err.message ||"An error occured")
-          toast.error(err.message ||"An error occured")
+          console.error(err.message ||"An error occured")
       }
   }, deps)
 
@@ -139,7 +138,7 @@ export function useFetchServices ({deps=[]}) {
           setError()
       } catch (err) {
           setError(err.message ||"An error occured")
-          toast.error(err.message ||"An error occured")
+          console.error(err.message ||"An error occured")
       }
   }, deps)
 
@@ -162,7 +161,7 @@ export function useFetchCreatAppointment ({deps=[]}) {
           setError()
       } catch (err) {
           setError(err.message ||"An error occured")
-          toast.error(err.message ||"An error occured")
+          console.error(err.message ||"An error occured")
       }
   }, deps)
 

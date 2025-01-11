@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Nav from './components/Nav';
 import Layout from './components/Layout';
 import { AuthProvide } from './context/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 
 
 
@@ -19,9 +20,10 @@ function App() {
     <div className='container'>
       <AuthProvide>
         <Nav/>
+        <ScrollToTop/>
+        <Layout/>
+        <Footer/>
       </AuthProvide>
-      <Layout/>
-      <Footer/>
     </div>
 );
 }

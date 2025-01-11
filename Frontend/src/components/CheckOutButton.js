@@ -1,7 +1,6 @@
 import React from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { API_BASE_URL } from '../constant'
-import { toast } from 'react-toastify'
 
 const stripePromise = loadStripe('pk_test_51Q1UKkCrN7PD1eLWWdsZbfXZdfUEs3dxljUwOlSQDIFLW3JXcxfD1jczcP8WV8PuH6W1lWOkLd81CEnOAtFD88AQ00yz5UzDh5');
 
@@ -22,14 +21,14 @@ function CheckOutButton({price, description}) {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                toast.error(errorData.error);
+                console.error(errorData.error);
             }
 
             const session = await response.json();
 
             if (session.error) {
                 console.log(session.error);
-                toast.error(session.error);
+                console.error(session.error);
                 return
             }
 
@@ -37,7 +36,7 @@ function CheckOutButton({price, description}) {
             const stripe = await stripePromise;
             await stripe.redirectToCheckout({'sessionId': session.id});
         } catch (error) {
-            toast.error();
+            console.error(error || error.message|| 'Failed to checkout');
         }
     }
     return (

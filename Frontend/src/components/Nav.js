@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
-function Nav({username}) {
+function Nav({username, handelLogin}) {
 	const[menuOpen, setMenuOpen] = useState(false);
 	const{isLoggedIn} = useAuth()
 
@@ -31,11 +31,16 @@ function Nav({username}) {
 						<div>
 							<Link to='/dashboard'><i className='fas fa-user-cycle text-2xl'></i></Link>
 						</div>
+						<div className='logout-btn'>
+						<Link to='/logout'><button id='login-btn'>Logout</button></Link>
+						</div>
 					</div>
 				) : (
 					<div className="registration-btn">
-						<button><Link to='/login' className='link-btn'>Login</Link></button>
-						<button><Link to='/sign-up' className='link-btn' >Sign up</Link></button>
+						<div className='login-btn'>
+						<Link to='/login'><button id='login-btn'>Login</button></Link>
+						</div>
+						<Link to='/sign-up' ><button className='sign-up hover:bg-white hover:border-[#002B5B]'>Sign up</button></Link>
 					</div>
 				)}
 			</div>
@@ -48,14 +53,23 @@ function Nav({username}) {
 				<div className="menu-bar bar"></div>
 			</div>
 
-			<ul className={`nav-links ${menuOpen ? "visible": " "}`}>
-				<li><Link to='/'>HOME</Link></li>
-				<li><Link to='/about'>ABOUT</Link></li>
-				<li><Link to='/services'>SERVICES</Link></li>
-				<li><Link to='/contact'>CONTACT</Link></li>
-				<li><Link to='/Login'>Login</Link></li>
-				<li><Link to='/sign-up'>Sing up</Link></li>
-			</ul>
+			{isLoggedIn ? (
+					<ul className={`nav-links ${menuOpen ? "visible": " "}`} onClick={toggleMenu}>
+						<li><Link to='/'>Home</Link></li>
+						<li><Link to='/about'>About</Link></li>
+						<li><Link to='/services'>Services</Link></li>
+						<li><Link to='/contact'>Contact</Link></li>
+					</ul>
+				) : (
+					<ul className={`nav-links ${menuOpen ? "visible": " "}`} onClick={toggleMenu}>
+						<li><Link to='/'>Home</Link></li>
+						<li><Link to='/about'>About</Link></li>
+						<li><Link to='/services'>Services</Link></li>
+						<li><Link to='/contact'>Contact</Link></li>
+						<li><Link to='/Login'>Login</Link></li>
+						<li><Link to='/sign-up'>Sing up</Link></li>
+					</ul>
+				)}
 		</nav>
 	)
 }

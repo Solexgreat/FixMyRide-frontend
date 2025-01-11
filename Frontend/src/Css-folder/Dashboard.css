@@ -1,0 +1,6 @@
+.active-link {
+    text-decoration: underline; /* Underline the link */
+    color: #002B5B; /* Make the text blue */
+    font-weight: bold;
+    transition: color 0.3s ease; /* Add a transition effect */
+}

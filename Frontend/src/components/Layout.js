@@ -15,6 +15,8 @@ import Login from "./Login";
 import CheckOutDialogBox from "./CheckOutDialogBox";
 // import Signup from "./Signup";
 import ContactPage from "./ContactPage";
+import Signup from "./Signup";
+import { AuthProvide } from "../context/AuthContext";
 
 
  function Layout() {
@@ -38,24 +40,24 @@ import ContactPage from "./ContactPage";
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/services" element={<ServicePage />} />
 
-          <Route path="/dashboard/*" element={
+          <Route path="/dashboard" element={
             <ProtectedRoute>
                 <Dashboard />
             </ProtectedRoute>
           } />
-          <Route path="dashboard/revenuesTable" element={
+          <Route path="revenuesTable" element={
             <ProtectedRoute>
-                <RevenueTable/>
+              <RevenueTable/>
             </ProtectedRoute>
-            }/>
-          <Route path="dashboard/appointmentsTable" element={
+          }/>
+          <Route path="appointmentsTable" element={
             <ProtectedRoute>
-               <AppointmentsTable/>
+              <AppointmentsTable/>
             </ProtectedRoute>
             }/>
           <Route path="/login" element={<Login/>} />
           <Route path="/contact" element={<ContactPage />} />
-          {/* <Route path="/sign-up" element={<Signup />} /> */}
+          <Route path="/sign-up" element={<Signup />} />
         </Routes>
       </div>
     );

@@ -21,16 +21,16 @@ function Appointments() {
       selectedServiceId: initialSelectedServiceId,
       selectedServiceName: initialSelectedServiceName,
       selectedServiceCategory: initialSelectedServiceCategory,
+      selectedServicePrice: initialSelectedServicePrice,
     } = location.state || {};
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedServicePrice, setSelectedServicePrice] = useState('');
-    const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [selectedServicePrice, setSelectedServicePrice] = useState(initialSelectedServicePrice ||'');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [userFriendlyDate, setUserFriendlyDate] = useState('');
     const [time, setTime] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(initialSelectedServiceCategory ||"");
-    const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId || '');
-    const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName || '');
+    const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId ||'');
+    const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName ||'');
     const {data: availableSlots, error: slotError, fetchData: localFetchAvailableSlots} = useFetchAvailableTimeSlot([date])
     const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
     const {data: services, error: serviceError, fetchData: localFetchServices} = useFetchServices([selectedCategory]);
@@ -54,23 +54,30 @@ function Appointments() {
     }
     if(initialSelectedServiceName){
       setSelectedServiceName(initialSelectedServiceName)
+      console.log('serviceName', selectedServiceName)
     }
     if(initialSelectedServiceId){
       setSelectedServiceId(initialSelectedServiceId)
     }
-  }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId])
+    if(initialSelectedServicePrice){
+      setSelectedServicePrice(initialSelectedServicePrice)
+    }
+  }, [initialSelectedServiceCategory, initialSelectedServiceName, initialSelectedServiceId, initialSelectedServicePrice])
 
   const handleServiceChange = (e) => {
     const [id, name, price] = e.target.value.split('|');
     setSelectedServiceId(id);
+    console.log('serviceId', selectedServiceId)
     setSelectedServiceName(name);
+    console.log('serviceName', selectedServiceName)
     setSelectedServicePrice(price);
+    console.log('serviceId', selectedServicePrice)
+
   };
 
   const handleDateChange = (e) => {
     const rawDate = new Date(e.target.value);
-    const formattedDate = format(rawDate, 'EEE, dd MMM yyyy');
-    setDate(formattedDate);
+    setDate(e.target.value);
   }
 
 
@@ -107,7 +114,8 @@ function Appointments() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/appointments/appointments`,
+        'http://127.0.0.1:5000/appointments/create',
+        // `${API_BASE_URL}/appointments/create`,
         {
           method: 'POST',
           headers: {
@@ -119,7 +127,7 @@ function Appointments() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create appointment');
+        throw new Error(errorData.msg || errorData.error || 'Failed to create appointment');
       }
 
       const result = await response.json();
@@ -133,7 +141,7 @@ function Appointments() {
         draggable: true,
       });
     } catch (error) {
-      toast.error(`Error: ${error.message}`);
+      throw new Error (`Error: ${error.msg, error.error}`);
     }
   };
 
@@ -165,6 +173,7 @@ function Appointments() {
                       <select id='Service-Type'
                       value={`${selectedServiceId}|${selectedServiceName}|${selectedServicePrice}`}
                       onChange={handleServiceChange}
+                      required
                       >
                           <option className="option" value="">
                               -- Select services --

@@ -1,21 +1,38 @@
 import React, { useEffect } from 'react'
 import { useFetchAllAppointments, useFetchAllAppointmentsBetween } from '../Hook/useFetch'
+import { useAuth } from '../context/AuthContext'
+import Dashboard from './Dashboard'
 
-function AppointmentsTable({filterDate}) {
+function AppointmentsTable() {
+  const{filterDate} = useAuth()
   const {date: appointments, fetchData: fetchAppointments} = useFetchAllAppointments([])
   const {date: appointmentsBetween, fetchData: localFetchAppointmentBetween} = useFetchAllAppointmentsBetween([filterDate])
 
-    useEffect(() => {
-        const {start, end} = filterDate
-        if (start){
-            const currentEndDate = end || new Date().toISOString().split('T')[0];
-            appointmentsBetween({startDate: start, endDate: currentEndDate})
-        }
-    }, [filterDate, fetchAppointments, localFetchAppointmentBetween])
 
-    const dataToDisplay = filterDate.start || filterDate.end ? appointmentsBetween: appointments;
+  useEffect(() => {
+    const token =  localStorage.getItem('sessionToken')
+    if (!token) {
+      console.error('No token found in localStorage');
+    }
+    fetchAppointments();
+  }, [fetchAppointments]);
+
+  useEffect(() => {
+      const {start, end} = filterDate
+      if (start){
+          const currentEndDate = end || new Date().toISOString().split('T')[0];
+          localFetchAppointmentBetween({startDate: start, endDate: currentEndDate})
+      }
+  }, [filterDate, localFetchAppointmentBetween])
+
+  const dataToDisplay = filterDate.start || filterDate.end ? appointmentsBetween: appointments;
   return (
-    <div className="p-6">
+    <div>
+      <div>
+        <Dashboard />
+      </div>
+      <div className='mb-6 px-4'>
+        <h2 className='text-xl font-bold mb-2'>Total Appointments</h2>
       <table className="min-w-full border border-gray-200">
         <thead>
           <tr className="bg-gray-100">
@@ -40,6 +57,7 @@ function AppointmentsTable({filterDate}) {
           ) }
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

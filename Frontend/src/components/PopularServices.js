@@ -68,9 +68,9 @@ function PopularServices() {
 	  }, [fetchServices]);
 
 
-	const handelServiceClick = (serviceId, serviceName, categoryName) => {
-		console.log({ serviceId, serviceName, categoryName });
-		navigate('/appointments', { state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, }});
+	const handelServiceClick = (serviceId, serviceName, categoryName, price) => {
+		// console.log({ serviceId, serviceName, categoryName });
+		navigate('/appointments', { state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, selectedServicePrice: price}});
 	}
 
 	var settings = {
@@ -91,7 +91,7 @@ function PopularServices() {
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
 			{popularServices.map(service => (
-				<div className="Card" key={service.service_id} onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
+				<div className="Card" key={service.service_id} onClick={() => handelServiceClick(service.service_id, service.name, service.category, service.price)}>
 					<div className='image'>
 						<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
 					</div>
@@ -105,7 +105,7 @@ function PopularServices() {
 		<div className='slider'>
 			<Slider {...settings}>
 				{popularServices.map((service) => (
-						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category)}>
+						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category, service.price)}>
 							<div className='image'>
 								<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt="" / >
 							</div>

@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext'
 import { Navigate } from 'react-router-dom'
 
 function ProtectedRoute({children}) {
-    const[isLoggedIn] = useAuth()
+    const{isLoggedIn} = useAuth()
 
   return isLoggedIn? children : <Navigate to="/" replace />
 }
