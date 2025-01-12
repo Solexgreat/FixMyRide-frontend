@@ -9,6 +9,7 @@ import { FaSpinner } from 'react-icons/fa';
 
 function Login() {
     const{setisLoggedIn} = useAuth()
+    const{setUser} = useAuth()
     const navigate = useNavigate()
     const[identifier, setIdentifier] = useState(" ")
     const[password, setPassword] = useState("")
@@ -28,10 +29,12 @@ function Login() {
       try{
         const response = await fetch(`${API_BASE_URL}/auths/login`, {
           method: 'POST',
+          mode: 'cors',
+          credentials: 'include',
           headers: {
             'Content-Type' : 'application/json',
           },
-          body: JSON.stringify(loginInfo)
+          body: JSON.stringify(loginInfo),
         });
 
         if (!response.ok){
@@ -42,14 +45,8 @@ function Login() {
 
         const result = await response.json();
         console.log('Login Response:', result);
-        const {token} = result //Getting the token
-        const {username} = result //Get username
-
-        if (token) {
-          localStorage.setItem('sessionToken', token);
-          console.log('Token saved to localStorage:', token);
-        }
-
+        const {user_type} = result
+        const {first_name} = result
 
         toast.success('Login successfull' , {
           position: 'top-right',
@@ -62,6 +59,7 @@ function Login() {
 
         setUsername(username)
         setisLoggedIn(true)
+        setUser({type: user_type, name: first_name})
         navigate('/dashboard')
         return result
       } catch (error) {

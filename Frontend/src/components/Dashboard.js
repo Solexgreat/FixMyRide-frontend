@@ -6,6 +6,7 @@ import { AuthProvide, useAuth } from '../context/AuthContext';
 function Dashboard() {
     const location = useLocation();
     const { setFilterDate } = useAuth();
+    const {user} = useAuth();
     const [localFilterDate, setLocalFilterDate] = useState({ start: '', end: '' })
 
     const handleDateChange = (field, value) => {
@@ -17,9 +18,9 @@ function Dashboard() {
     <div>
         <header className='p-6'>
             <section>
-                <h1 className='text-2xl font-bold mb-4'>Admin Dashboard</h1>
+                <h1 className='text-2xl font-bold mb-4'>Dashboard</h1>
                 <div className='gap-4'>
-                    <h2>Name</h2>
+                    <h2>{ user.name }</h2>
                 </div>
                 <div className='flex gap-4 mb-6'>
                     <div>
@@ -43,9 +44,13 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className='flex gap-4 mb-6'>
-                    <div >
-                        <h2 className={`text-xl font-bold ${location.pathname === '/revenuesTable' ? 'active-link' : ''}`}><Link to= "/revenuesTable">Revenues</Link></h2>
-                    </div>
+                    {
+                        user.type === 'admin' ? (
+                            <div >
+                                <h2 className={`text-xl font-bold ${location.pathname === '/revenuesTable' ? 'active-link' : ''}`}><Link to= "/revenuesTable">Revenues</Link></h2>
+                            </div>
+                        ) : null
+                    }
 
                     <div>
                         <h2 className={`text-xl font-bold ${location.pathname === '/appointmentsTable' ? 'active-link' : ''}`}><Link to ="/appointmentsTable">Appointments</Link></h2>

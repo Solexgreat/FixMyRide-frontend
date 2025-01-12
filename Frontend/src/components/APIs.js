@@ -4,12 +4,13 @@ import { API_BASE_URL } from '../constant'
 
 export async function fetchAllRevenues () {
 
-  const token =  localStorage.getItem('sessionToken')
 
   try{
     const response = await fetch(`${API_BASE_URL}/revenues/`, {
+      method: 'GET',
+      credentials: 'include',
       headers: {
-        'Authorization' : `Bearer ${token}`,
+        'Content-Type': 'application/json',
       }
     })
 
@@ -27,16 +28,17 @@ export async function fetchAllRevenues () {
 }
 
 export async function fetchAllRevenuesBetween ({startDate, endDate}) {
-  const token =  localStorage.getItem('sessionToken')
 
   const initial_date= startDate
   const current_date= startDate
 
   try{
     const response = await fetch(`${API_BASE_URL}/revenues/history_between?initial_date=${initial_date}&current_date=${current_date}`, {
+      method: 'GET',
       headers: {
-        'Authorization' : `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
+      credentials: 'include',
     })
 
     if (!response.ok){
@@ -64,7 +66,7 @@ export async function fetchAllAppointments () {
 
     if (!response.ok){
       const errorData = await response.json()
-      throw new Error (errorData.message || 'Failed to fetch revenues history')
+      throw new Error (errorData.error || 'Failed to fetch revenues history')
     }
 
     const result = await response.json()

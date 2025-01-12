@@ -41,6 +41,10 @@
     width: 100%;
 }
 
+.service-sekeleton{
+   background-color: rgb(117, 115, 115);
+}
+
 .service-card{
     position: relative;
     color: #333333;

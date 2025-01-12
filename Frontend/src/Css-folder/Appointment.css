@@ -38,12 +38,17 @@
 }
 
 
-label{
+.category-services-row label{
     font-weight: bold;
     margin-bottom: 0.5rem;
     color: white;
 }
 
+.time-date-row label{
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: white;
+}
 
 .category-services{
     display: flex;

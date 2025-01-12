@@ -3,6 +3,8 @@ import { fetchServices } from './APIs';
 import { useFetchCategories } from '../Hook/useFetch';
 import { useNavigate } from 'react-router-dom'
 import '../Css-folder/servicePage.css'
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function ServicePage() {
   const [servicesByCategory, setServicesByCategory] = useState({});
@@ -12,7 +14,7 @@ function ServicePage() {
 
 
   // Cache services to avoid re-fetching
-  const cachedServices = useMemo(() => servicesByCategory, [servicesByCategory]);
+  // const cachedServices = useMemo(() => servicesByCategory, [servicesByCategory]);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -29,9 +31,9 @@ function ServicePage() {
         // Fetch services if categories exist
         if (categories.length > 0) {
           const servicePromises = categories.map(async (category) => {
-            if (cachedServices[category]) {
-              return { category, services: cachedServices[category] }; // Use cached data
-            }
+            // if (cachedServices[category]) {
+            //   return { category, services: cachedServices[category] }; // Use cached data
+            // }
             const services = await fetchServices(category);
             return { category, services };
           });
@@ -52,7 +54,7 @@ function ServicePage() {
     };
 
     fetchAllData();
-  }, [categories, cachedServices, localFetchCategories]);
+  }, [categories, localFetchCategories]);
 
   const handleServiceClick = (serviceId, serviceName, categoryName, price) =>{
     navigate('/appointments', {state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, selectedServicePrice: price}})
@@ -62,7 +64,31 @@ function ServicePage() {
   return (
     <header className='servicePage'>
       <h1>Services</h1>
-        {categories.map((category, index) => (
+      { loading?
+        Array.from({ length: 4 }).map((_, index) => (
+          <section className='service_category' key={index}>
+            <h2>Service Category</h2>
+            <div className='services'>
+              {
+                Array.from({ length: 3 }).map((_, index) => (
+                  <div className='service-card' key={index}>
+                    <div className='image'>
+                      <Skeleton height={200} className='bg-gray-400' />
+                    </div>
+                    <div className='card-text'>
+                      <h3>
+                      <Skeleton height={20} width={100}  />
+                      </h3>
+                    </div>
+                    <div className='card-text'>
+                      <p><Skeleton count={3} /></p>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </section>
+        )) : categories.map((category, index) => (
           <section className='service_category'>
             <h2>
               {category}

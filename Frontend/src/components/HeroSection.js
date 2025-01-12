@@ -19,7 +19,7 @@ const slides = [
 		getImageSrc: () => require("../images/slide 2.jpg"),
 		header: 'Professional Service from Ceritified Mechanics',
 		text: 'Your vehicle is in good hands with our team of skilled professionals',
-		btn: 'Meet Our Team'
+		btn: 'Book an Appointment'
 	},
 
 	{
@@ -27,7 +27,7 @@ const slides = [
 		getImageSrc: () => require("../images/slide 3.jpg"),
 		header: 'No Surprises-Trasparent Pricing',
 		text: 'View pricing upfront and manage payments effortlessly through the app',
-		btn: 'View Service & Pricing'
+		btn: 'Book an Appointment'
 	}
 ]
 

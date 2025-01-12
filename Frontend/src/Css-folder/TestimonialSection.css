@@ -42,6 +42,15 @@
 		font-size: 2.2rem;
 	}
 
+	.carousel-header h2::after{
+		content: '';
+		display: block;
+		width: 12rem;
+		height: 6px;
+		background-color: #002B5B;
+		margin: 0.2rem auto 0;
+	  }
+
 	/* Review box with inner shadow */
 	.review-box {
 		position: relative;

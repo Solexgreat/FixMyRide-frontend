@@ -5,11 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { fetchPopularService } from './APIs';
 import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// // import 'swiper/swiper-bundle.min.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 
 
@@ -20,7 +17,7 @@ const NextArrow = ({ onClick }) => (
         style={{
             fontSize: '3rem',
             color: '#002B5B',
-            right: '10px',
+            right: '5px',
             zIndex: 1
         }}
     >
@@ -35,7 +32,7 @@ const PrevArrow = ({ onClick }) => (
         style={{
             fontSize: '3rem',
             color: '#002B5B',
-            left: '2px',
+            left: '-16px',
             zIndex: 1
         }}
     >
@@ -47,6 +44,7 @@ const PrevArrow = ({ onClick }) => (
 function PopularServices() {
 
 	const [popularServices, setPopularServices] = useState([])
+	const [loading, setLoading] = useState(true)
 	// const [error, setError] = useState(null)
 	const navigate = useNavigate();
 
@@ -59,6 +57,8 @@ function PopularServices() {
 		} catch (err){
 			toast.error(err.message)
 			setPopularServices([])
+		} finally {
+			setLoading(false)
 		}
 	}, [])
 
@@ -90,7 +90,20 @@ function PopularServices() {
 		<ToastContainer/>
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
-			{popularServices.map(service => (
+			{loading?
+			Array.from({length: 3}).map((_, index) => (
+				<div className='Card' key={index}>
+					<div className='image'>
+						<Skeleton height={200} />
+					</div>
+					<div className='card-text'>
+						<h3><Skeleton height={20} width={100} /></h3>
+					</div>
+					<div className='card-text'>
+						<p><Skeleton count={3} /></p>
+					</div>
+				</div>
+			)) : popularServices.map(service => (
 				<div className="Card" key={service.service_id} onClick={() => handelServiceClick(service.service_id, service.name, service.category, service.price)}>
 					<div className='image'>
 						<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
@@ -104,17 +117,31 @@ function PopularServices() {
 		</div>
 		<div className='slider'>
 			<Slider {...settings}>
-				{popularServices.map((service) => (
-						<div className='Card' key={service.service_id}  onClick={() => handelServiceClick(service.service_id, service.name, service.category, service.price)}>
-							<div className='image'>
-								<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt="" / >
-							</div>
-							<div className='card-text'>
-								<h3>{service.name}</h3>
-								<p>{service.description}</p>
-							</div>
+			{loading?
+				Array.from({length: 3}).map((_, index) => (
+					<div className='Card' key={index}>
+						<div className='image'>
+							<Skeleton height={200} />
 						</div>
-				))}
+						<div className='card-text'>
+							<h3><Skeleton height={20} width={100} /></h3>
+						</div>
+						<div className='card-text'>
+							<p><Skeleton count={3} /></p>
+						</div>
+					</div>
+				)) : popularServices.map(service => (
+					<div className="Card" key={service.service_id} onClick={() => handelServiceClick(service.service_id, service.name, service.category, service.price)}>
+						<div className='image'>
+							<img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
+						</div>
+						<div className='card-text'>
+							<h3>{service.name}</h3>
+							<p>{service.description}</p>
+						</div>
+					</div>
+				))
+			}
 			</Slider>
 		</div>
 	</section>

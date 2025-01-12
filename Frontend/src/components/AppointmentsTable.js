@@ -10,10 +10,6 @@ function AppointmentsTable() {
 
 
   useEffect(() => {
-    const token =  localStorage.getItem('sessionToken')
-    if (!token) {
-      console.error('No token found in localStorage');
-    }
     fetchAppointments();
   }, [fetchAppointments]);
 
