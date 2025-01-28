@@ -49,7 +49,9 @@ function ServicePage() {
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setLoading(false);
+        if (servicesByCategory) {
+          setLoading(false);
+        }
       }
     };
 

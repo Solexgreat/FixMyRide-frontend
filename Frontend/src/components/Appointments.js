@@ -23,6 +23,7 @@ function Appointments() {
       selectedServiceCategory: initialSelectedServiceCategory,
       selectedServicePrice: initialSelectedServicePrice,
     } = location.state || {};
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedServicePrice, setSelectedServicePrice] = useState(initialSelectedServicePrice ||'');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -101,6 +102,15 @@ function Appointments() {
     setIsDialogOpen(true);
   }
 
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value
+    if (validatePhoneNumber(value)){
+      setPhoneNumber(value)
+    }
+    else{
+      toast.error('Invalid phone number! Enter a 10-digit number.');
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -220,6 +230,17 @@ function Appointments() {
                               ))}
                       </select>
                     </div>
+
+                    <div className='customerPhoneNumber-row' >
+                          <label htmlFor='phoneNumber' >Phone Number</label>
+                          <input id='phoneNumber'
+                          type='text'
+                          pattern="[0-9]{10}"
+                          title="Enter a valid 10-digit phone number"
+                          value={phoneNumber}
+                          onChange={handlePhoneNumberChange}
+                          required />
+                      </div>
                   </div>
                 <button type="submit" className="submit-button"
                 onClick={handleBookAppointment}
