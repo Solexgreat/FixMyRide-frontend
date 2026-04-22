@@ -102,6 +102,20 @@
     height: 200px;
 }
 
+.service-cardImage{
+    min-height: 200px;
+}
+
+.service-cardImageFallback{
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5e7eb;
+    color: #4b5563;
+    font-weight: 600;
+}
+
 .service-cardText h3{
     font-size: 1.5rem;
     font-weight: 800;

@@ -73,7 +73,7 @@ function PopularServices() {
 
 	const [popularServices, setPopularServices] = useState([])
 	const [loading, setLoading] = useState(true)
-	// const [error, setError] = useState(null)
+	const [fetchFailed, setFetchFailed] = useState(false)
 	const navigate = useNavigate();
 
 
@@ -82,12 +82,14 @@ function PopularServices() {
 
 		const loadServices = async () => {
 			try{
+				setFetchFailed(false)
 				const services = await fetchPopularService();
 				if (isMounted) {
 					setPopularServices(services);
 				}
 			} catch (err){
 				if (isMounted) {
+					setFetchFailed(true)
 					toast.error(err.message)
 					setPopularServices([])
 				}
@@ -111,6 +113,8 @@ function PopularServices() {
 		navigate('/appointments', { state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, selectedServicePrice: price}});
 	}
 
+	const shouldShowPlaceholder = loading || fetchFailed;
+
 	var settings = {
     infinite: true,
     speed: 500,
@@ -128,7 +132,7 @@ function PopularServices() {
 		<ToastContainer/>
 		<h2>Popular Services</h2>
 		 <div className='phone-slider'>
-			{loading?
+			{shouldShowPlaceholder ?
 			Array.from({length: 3}).map((_, index) => (
 				<div className='Card' key={index}>
 					<div className='image'>
@@ -153,7 +157,7 @@ function PopularServices() {
 		</div>
 		<div className='slider'>
 			<Slider {...settings}>
-			{loading?
+			{shouldShowPlaceholder ?
 				Array.from({length: 3}).map((_, index) => (
 					<div className='Card' key={index}>
 						<div className='image'>

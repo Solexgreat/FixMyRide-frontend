@@ -6,9 +6,38 @@ import '../Css-folder/servicePage.css'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
+const ServiceImage = ({ service }) => {
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [hasImageError, setHasImageError] = useState(false);
+
+  const imageName = service?.image ? service.image.split('/').pop() : '';
+  const imageSrc = `${process.env.PUBLIC_URL}/images/${imageName}`;
+
+  return (
+    <div className='service-cardImage'>
+      {isImageLoading ? <Skeleton height={200} className='bg-gray-400' /> : null}
+      {hasImageError ? (
+        <div className='service-cardImageFallback'>Image unavailable</div>
+      ) : (
+        <img
+          src={imageSrc}
+          alt={service?.title || service?.name || 'service image'}
+          onLoad={() => setIsImageLoading(false)}
+          onError={() => {
+            setHasImageError(true);
+            setIsImageLoading(false);
+          }}
+          style={{ display: isImageLoading ? 'none' : 'block' }}
+        />
+      )}
+    </div>
+  );
+};
+
 function ServicePage() {
   const [servicesByCategory, setServicesByCategory] = useState({});
   const [loading, setLoading] = useState(true);
+	const [fetchFailed, setFetchFailed] = useState(false);
 	const {data: categories = [], fetchData: localFetchCategories} = useFetchCategories();
 	const navigate = useNavigate();
 
@@ -19,6 +48,7 @@ function ServicePage() {
   useEffect(() => {
     const fetchAllData = async () => {
       setLoading(true);
+      setFetchFailed(false);
 
       try {
 
@@ -47,6 +77,8 @@ function ServicePage() {
           setServicesByCategory(servicesMap);
         }
       } catch (error) {
+        setFetchFailed(true);
+        setServicesByCategory({});
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
@@ -60,11 +92,13 @@ function ServicePage() {
     navigate('/appointments', {state: {selectedServiceId: serviceId, selectedServiceName: serviceName, selectedServiceCategory: categoryName, selectedServicePrice: price}})
   }
 
+  const shouldShowPlaceholder = loading || fetchFailed;
+
 
   return (
     <header className='servicePage'>
       <h1>Services</h1>
-      { loading?
+      { shouldShowPlaceholder ?
         Array.from({ length: 4 }).map((_, index) => (
           <section className='service_category' key={index}>
             <h2>Service Category</h2>
@@ -97,9 +131,7 @@ function ServicePage() {
               {
                 servicesByCategory[category]?.map((service, index) => (
                 <div className='service-card' onClick={()=> handleServiceClick(service.service_id, service.name, service.category, service.price)} key={index}>
-                  <div className='service-cardImage'>
-                    <img src={`${process.env.PUBLIC_URL}/images/${service.image.split('/').pop()}`} alt={service.title} />
-                  </div>
+                  <ServiceImage service={service} />
                   <div className='service-cardText'>
                    <h3>{service.name}</h3>
                    <p>{service.description}</p>
