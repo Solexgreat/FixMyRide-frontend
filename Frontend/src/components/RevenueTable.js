@@ -5,8 +5,12 @@ import Dashboard from './Dashboard'
 
 function RevenueTable() {
     const {filterDate} = useAuth()
-    const {date: revenues, fetchData: fetchRevenues} = useFetchAllRevenues([])
-    const {date: revenuesBetween, fetchData: localFetchRevenuesBetween} = useFetchAllRevenuesBetween([filterDate])
+    const {data: revenues, fetchData: fetchRevenues} = useFetchAllRevenues()
+    const {data: revenuesBetween, fetchData: localFetchRevenuesBetween} = useFetchAllRevenuesBetween()
+
+    useEffect(() => {
+        fetchRevenues();
+    }, [fetchRevenues]);
 
     useEffect(() => {
         if (filterDate?.start){
@@ -52,7 +56,7 @@ function RevenueTable() {
                     <tfoot>
                         {dataToDisplay && dataToDisplay.length > 0 ? (
                             dataToDisplay.map((item, index) => (
-                             <tr>
+                             <tr key={index}>
                                 <td className='px-4 py-2'> </td>
                                 <td className='px-4 py-2'> {item.total_repair_revenue} </td>
                                 <td className='px-4 py-2'> </td>

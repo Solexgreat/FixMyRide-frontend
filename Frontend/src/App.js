@@ -5,7 +5,6 @@ import './Css-folder/why_chose_us.css';
 import './Css-folder/HeroSection.css';
 import './Css-folder/popularService.css';
 import './Css-folder/TestimonialSection.css';
-import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import Nav from './components/Nav';
 import Layout from './components/Layout';

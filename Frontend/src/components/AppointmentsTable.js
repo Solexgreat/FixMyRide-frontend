@@ -5,8 +5,8 @@ import Dashboard from './Dashboard'
 
 function AppointmentsTable() {
   const{filterDate} = useAuth()
-  const {date: appointments, fetchData: fetchAppointments} = useFetchAllAppointments([])
-  const {date: appointmentsBetween, fetchData: localFetchAppointmentBetween} = useFetchAllAppointmentsBetween([filterDate])
+  const {data: appointments, fetchData: fetchAppointments} = useFetchAllAppointments()
+  const {data: appointmentsBetween, fetchData: localFetchAppointmentBetween} = useFetchAllAppointmentsBetween()
 
 
   useEffect(() => {
@@ -39,16 +39,16 @@ function AppointmentsTable() {
         </thead>
         <tbody>
           {dataToDisplay && dataToDisplay.length > 0 ? (
-            dataToDisplay.map((item, index) => {
-              <tr>
+            dataToDisplay.map((item, index) => (
+              <tr key={index}>
                 <td className="border px-4 py-2">{item.service_name}</td>
                 <td className="border px-4 py-2">{item.status}</td>
                 <td className="border px-4 py-2">{item.date}</td>
               </tr>
-            })
+            ))
           ) : (
             <tr>
-            <td className="border px-4 py-2">No available data</td>
+            <td className="border px-4 py-2" colSpan="3">No available data</td>
           </tr>
           ) }
         </tbody>

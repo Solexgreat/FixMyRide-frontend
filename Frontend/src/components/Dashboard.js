@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import '../Css-folder/Dashboard.css';
 import { Link, useLocation } from 'react-router-dom';
-import { AuthProvide, useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Dashboard() {
     const location = useLocation();
@@ -9,8 +9,7 @@ function Dashboard() {
     const {user} = useAuth();
     const [localFilterDate, setLocalFilterDate] = useState({ start: '', end: '' })
 
-    const handleDateChange = (field, value) => {
-        const updatedFilterDate = { ...localFilterDate, [field]: value };
+    const handleDateChange = (updatedFilterDate) => {
         setLocalFilterDate(updatedFilterDate);
         setFilterDate(updatedFilterDate); // Update context
     };
@@ -28,7 +27,7 @@ function Dashboard() {
                         <input
                             type='date'
                             value={localFilterDate.start}
-                            onChange={(e) => handleDateChange({'start': e.target.value})}
+                            onChange={(e) => handleDateChange({ ...localFilterDate, start: e.target.value })}
                             className='p-2 mt-1 block w-full rounded-sm shadow-custom-inner border-gray-900'
                         />
                     </div>
@@ -38,7 +37,7 @@ function Dashboard() {
                         <input
                             type='date'
                             value={localFilterDate.end}
-                            onChange={(e) =>  handleDateChange({'end': e.target.value})}
+                            onChange={(e) =>  handleDateChange({ ...localFilterDate, end: e.target.value })}
                             className='p-2 mt-1 block w-full rounded-sm shadow-custom-inner border-gray-900'
                         />
                     </div>

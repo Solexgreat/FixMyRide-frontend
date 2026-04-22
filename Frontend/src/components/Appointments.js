@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
 import '../Css-folder/Appointment.css'
-import { Link, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { API_BASE_URL } from '../constant';
 import 'react-toastify/dist/ReactToastify.css';
-import { format } from 'date-fns';
-import { validatePhoneNumber } from '../utils/validationUtils';
 import{ useFetchCategories, useFetchAvailableTimeSlot, useFetchServices}  from '../Hook/useFetch';
-import { useAuth } from '../context/AuthContext';
-import CheckOutPage from './CheckOutButton';
-import CheckOutButton from './CheckOutButton';
 import CheckOutDialogBox from './CheckOutDialogBox';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import { useLocation } from 'react-router-dom';
 
 
 // console.log('fetchAvailableTime:', fetchAvailableTime);
@@ -23,18 +19,17 @@ function Appointments() {
       selectedServiceCategory: initialSelectedServiceCategory,
       selectedServicePrice: initialSelectedServicePrice,
     } = location.state || {};
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedServicePrice, setSelectedServicePrice] = useState(initialSelectedServicePrice ||'');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-    const [userFriendlyDate, setUserFriendlyDate] = useState('');
     const [time, setTime] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(initialSelectedServiceCategory ||"");
     const [selectedServiceId, setSelectedServiceId] = useState(initialSelectedServiceId ||'');
     const [selectedServiceName, setSelectedServiceName] = useState(initialSelectedServiceName ||'');
-    const {data: availableSlots, error: slotError, fetchData: localFetchAvailableSlots} = useFetchAvailableTimeSlot([date])
-    const {data: categories, error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
-    const {data: services, error: serviceError, fetchData: localFetchServices} = useFetchServices([selectedCategory]);
+    const {data: availableSlots, fetchData: localFetchAvailableSlots} = useFetchAvailableTimeSlot()
+    const {data: categories, fetchData: localFetchCategories} = useFetchCategories();
+    const { data: services, fetchData: localFetchServices } = useFetchServices();
+    const [phone, setPhone] = useState('');
 
 
   useEffect(() => {
@@ -55,7 +50,6 @@ function Appointments() {
     }
     if(initialSelectedServiceName){
       setSelectedServiceName(initialSelectedServiceName)
-      console.log('serviceName', selectedServiceName)
     }
     if(initialSelectedServiceId){
       setSelectedServiceId(initialSelectedServiceId)
@@ -68,16 +62,12 @@ function Appointments() {
   const handleServiceChange = (e) => {
     const [id, name, price] = e.target.value.split('|');
     setSelectedServiceId(id);
-    console.log('serviceId', selectedServiceId)
     setSelectedServiceName(name);
-    console.log('serviceName', selectedServiceName)
     setSelectedServicePrice(price);
-    console.log('serviceId', selectedServicePrice)
 
   };
 
   const handleDateChange = (e) => {
-    const rawDate = new Date(e.target.value);
     setDate(e.target.value);
   }
 
@@ -100,16 +90,6 @@ function Appointments() {
     }
 
     setIsDialogOpen(true);
-  }
-
-  const handlePhoneNumberChange = (e) => {
-    const value = e.target.value
-    if (validatePhoneNumber(value)){
-      setPhoneNumber(value)
-    }
-    else{
-      toast.error('Invalid phone number! Enter a 10-digit number.');
-    }
   }
 
   const handleSubmit = async (e) => {
@@ -151,7 +131,7 @@ function Appointments() {
         draggable: true,
       });
     } catch (error) {
-      throw new Error (`Error: ${error.msg, error.error}`);
+      toast.error(error.message || 'Failed to create appointment');
     }
   };
 
@@ -233,15 +213,13 @@ function Appointments() {
 
                     <div className='customerPhoneNumber-row' >
                           <label htmlFor='phoneNumber' >Phone Number</label>
-                          <input id='phoneNumber'
-                          type='text'
-                          pattern="[0-9]{10}"
-                          title="Enter a valid 10-digit phone number"
-                          value={phoneNumber}
-                          onChange={handlePhoneNumberChange}
-                          required />
-                      </div>
-                  </div>
+                          <PhoneInput
+                          country={'us'}
+                          value={phone}
+                          onChange={setPhone}
+                        />
+                    </div>
+                </div>
                 <button type="submit" className="submit-button"
                 onClick={handleBookAppointment}
                 >

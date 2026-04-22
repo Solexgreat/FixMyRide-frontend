@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 function ContactPage() {
     const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
@@ -10,6 +11,7 @@ function ContactPage() {
         e.preventDefault();
         toast.success('Message sent successfully');
         setName('');
+        setLastName('');
         setEmail('');
         setMessage('');
     }
@@ -34,10 +36,11 @@ function ContactPage() {
             <div className="bg-white shadow-md rounded-lg p-6 lg:col-span-1">
                 <h3 className='text-xl font-semibold text-gray-800 mb-4'>Find us Here:</h3>
                 <iframe
+                title="FixMyRide location map"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d35059.05650373603!2d3.2226051399084685!3d6.6051114451141!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b9a8952f3c043%3A0xc535e05cd3311792!2sAyobo%2C%20Lagos%20102213%2C%20Lagos!5e0!3m2!1sen!2sng!4v1736241803231!5m2!1sen!2sng" 
                 width="600" height="450"
-                style={{ border: 0 }} allowfullscreen=""
-                loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                style={{ border: 0 }} allowFullScreen
+                loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                 className="w-full aspect-video rounded-lg"
                 >
                 </iframe>
@@ -51,12 +54,12 @@ function ContactPage() {
                         <legend className='text-2xl font-bold text-gray-800 mb-4'>Send us a message</legend>
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                             <div>
-                                <label htmlFor='First Name' for="name"
+                                <label htmlFor='first-name'
                                 className='block font-semibold text-gray-800 mb-2'
                                 >
                                    First Name:
                                 </label>
-                                <input type="text" id="name" name="name" required
+                                <input type="text" id="first-name" name="firstName" required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className='w-full border border-gray-300 rounded-md p-2
@@ -65,14 +68,14 @@ function ContactPage() {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='last name' for="last name"
+                                <label htmlFor='last-name'
                                 className='block font-semibold text-gray-800 mb-2'
                                 >
                                    Last Name:
                                 </label>
-                                <input type="text" id="name" name="name" required
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                <input type="text" id="last-name" name="lastName" required
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
                                 className='w-full border border-gray-300 rounded-md p-2
                                 shadow-custom-inner
                                 focus:ring-2 focus:ring-blue-500 outline-none mb-3'
@@ -80,7 +83,7 @@ function ContactPage() {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor='email' for="email"
+                            <label htmlFor='email'
                             className='block font-semibold text-gray-800 mb-2'
                             >
                                 Email:
@@ -94,7 +97,7 @@ function ContactPage() {
                             />
                         </div>
                         <div>
-                            <label for="message"
+                            <label htmlFor='message'
                             className='block font-semibold text-gray-800 mb-2'
                             >
                                 Message:

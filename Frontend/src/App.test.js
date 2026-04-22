@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { validatePhoneNumber } from './utils/validationUtils';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('accepts a valid 10-digit phone number', () => {
+  expect(validatePhoneNumber('1234567890')).toBe(true);
+});
+
+test('rejects an invalid phone number', () => {
+  expect(validatePhoneNumber('12345')).toBe(false);
 });

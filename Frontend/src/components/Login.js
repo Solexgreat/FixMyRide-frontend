@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import {useNavigate } from 'react-router-dom'
-import Nav from './Nav'
 import { API_BASE_URL } from '../constant'
 import { toast, ToastContainer } from 'react-toastify'
 import { FaSpinner } from 'react-icons/fa';
@@ -13,7 +12,6 @@ function Login() {
     const navigate = useNavigate()
     const[identifier, setIdentifier] = useState(" ")
     const[password, setPassword] = useState("")
-    const [username, setUsername] = useState(" ")
     const[loading, setLoading] = useState(false)
 
     const handelLogin = async (e) => {
@@ -57,7 +55,6 @@ function Login() {
           draggable: true,
         });
 
-        setUsername(username)
         setisLoggedIn(true)
         setUser({type: user_type, name: first_name})
         navigate('/dashboard')

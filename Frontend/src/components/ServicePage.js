@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchServices } from './APIs';
 import { useFetchCategories } from '../Hook/useFetch';
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 function ServicePage() {
   const [servicesByCategory, setServicesByCategory] = useState({});
   const [loading, setLoading] = useState(true);
-  const {data: categories = [], error: categoryError, fetchData: localFetchCategories} = useFetchCategories([]);
+	const {data: categories = [], fetchData: localFetchCategories} = useFetchCategories();
 	const navigate = useNavigate();
 
 
@@ -49,9 +49,7 @@ function ServicePage() {
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        if (servicesByCategory) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
 
@@ -91,7 +89,7 @@ function ServicePage() {
             </div>
           </section>
         )) : categories.map((category, index) => (
-          <section className='service_category'>
+          <section className='service_category' key={index}>
             <h2>
               {category}
             </h2>

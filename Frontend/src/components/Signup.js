@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import '../Css-folder/signup.css'
 import { toast, ToastContainer } from 'react-toastify'
-import { validatePhoneNumber } from '../utils/validationUtils'
 import { API_BASE_URL } from '../constant'
 import { useNavigate } from 'react-router-dom'
 import { FaSpinner } from 'react-icons/fa';
@@ -82,7 +81,7 @@ function Signup() {
             navigate('/login')
         }
         catch (error) {
-            toast.error(`Error: ${error.error}`)
+            toast.error(`Error: ${error.message}`)
         } finally {
           setLoading(false)
         }

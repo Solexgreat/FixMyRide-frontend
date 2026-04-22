@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify'
 import { API_BASE_URL } from '../constant'
 
 
@@ -30,7 +29,7 @@ export async function fetchAllRevenues () {
 export async function fetchAllRevenuesBetween ({startDate, endDate}) {
 
   const initial_date= startDate
-  const current_date= startDate
+  const current_date= endDate
 
   try{
     const response = await fetch(`${API_BASE_URL}/revenues/history_between?initial_date=${initial_date}&current_date=${current_date}`, {
